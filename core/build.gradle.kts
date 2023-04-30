@@ -49,7 +49,7 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 api(kotlinx.serialization.json)
-                implementation(projects.expectCore)
+                implementation(projects.kommanderCore)
             }
         }
 
