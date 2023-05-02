@@ -17,26 +17,11 @@ kotlin {
     js(IR) { library() }
 
     val targetGroups = mapOf(
-        "macos" to listOf(
-            macosX64()
-        ),
-        "ios" to listOf(
-            iosArm64(),
-            iosArm32(),
-            iosX64()
-        ),
-        "watchos" to listOf(
-            watchosArm32(),
-            watchosArm64(),
-            watchosX86(),
-        ),
-        "tvos" to listOf(
-            tvosArm64(),
-            tvosX64()
-        ),
-        "linux" to listOf(
-            linuxX64()
-        )
+        "macos" to macOsTargets(),
+        "ios" to iosTargets(),
+        "watchos" to watchOsTargets(),
+        "tvos" to tvOsTargets(),
+        "linux" to linuxTargets()
     )
 
     sourceSets {
@@ -48,7 +33,7 @@ kotlin {
 
         val commonTest by getting {
             dependencies {
-                api(kotlinx.serialization.json)
+                implementation(kotlinx.serialization.json)
                 implementation(projects.kommanderCore)
             }
         }
