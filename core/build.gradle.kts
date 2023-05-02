@@ -3,9 +3,9 @@ plugins {
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("tz.co.asoft.library")
-    id("io.codearte.nexus-staging")
-    signing
 }
+
+description = "A Kotlin Multiplatform Library for detecting Platforms"
 
 android {
     configureAndroid("src/androidMain")
@@ -14,14 +14,14 @@ android {
 kotlin {
     android { library() }
     jvm { library() }
-    js(IR) { library() }
+    if(Targeting.JS) js(IR) { library() }
 
     val targetGroups = mapOf(
-        "macos" to macOsTargets(),
-        "ios" to iosTargets(),
-        "watchos" to watchOsTargets(),
-        "tvos" to tvOsTargets(),
-        "linux" to linuxTargets()
+        "macos" to if(Targeting.OSX) macOsTargets() else listOf(),
+        "ios" to if(Targeting.OSX) iosTargets() else listOf(),
+        "watchos" to if(Targeting.OSX) watchOsTargets() else listOf(),
+        "tvos" to if(Targeting.OSX) tvOsTargets() else listOf(),
+        "linux" to if(Targeting.LINUX) linuxTargets() else listOf()
     )
 
     sourceSets {
@@ -38,9 +38,11 @@ kotlin {
             }
         }
 
-        val jsMain by getting {
-            dependencies {
-                api(npm("platform", npm.versions.platform.get()))
+        if(Targeting.JS) {
+            val jsMain by getting {
+                dependencies {
+                    api(npm("platform", npm.versions.platform.get()))
+                }
             }
         }
 
@@ -55,9 +57,3 @@ kotlin {
         }
     }
 }
-
-
-aSoftOSSLibrary(
-    version = asoft.versions.root.get(),
-    description = "A Kotlin Multiplatform Library for detecting Platforms"
-)
