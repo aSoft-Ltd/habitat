@@ -1,59 +1,45 @@
+import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
+import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
+
 plugins {
-    id("com.android.library")
     kotlin("multiplatform")
     kotlin("plugin.serialization")
     id("tz.co.asoft.library")
 }
 
-description = "A Kotlin Multiplatform Library for detecting Platforms"
-
-android {
-    configureAndroid("src/androidMain")
-}
+description = "A kotlin multiplatform library to detect the current running platform"
 
 kotlin {
-    android { library() }
-    jvm { library() }
-    if(Targeting.JS) js(IR) { library() }
-
-    val targetGroups = mapOf(
-        "macos" to if(Targeting.OSX) macOsTargets() else listOf(),
-        "ios" to if(Targeting.OSX) iosTargets() else listOf(),
-        "watchos" to if(Targeting.OSX) watchOsTargets() else listOf(),
-        "tvos" to if(Targeting.OSX) tvOsTargets() else listOf(),
-        "linux" to if(Targeting.LINUX) linuxTargets() else listOf()
-    )
+    if (Targeting.JVM) jvm { library() }
+    if (Targeting.JS) js(IR) { library() }
+    if (Targeting.WASM) wasmJs { library() }
+    if (Targeting.WASM) wasmWasi { library() }
+    val osxTargets = if (Targeting.OSX) osxTargets() else listOf()
+    val ndkTargets = if (Targeting.NDK) ndkTargets() else listOf()
+    val linuxTargets = if (Targeting.LINUX) linuxTargets() else listOf()
+    val mingwTargets = if (Targeting.MINGW) mingwTargets() else listOf()
 
     sourceSets {
-        val commonMain by getting {
-            dependencies {
-                api(kotlinx.serialization.core)
-            }
+        commonMain.dependencies {
+
         }
 
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlinx.serialization.json)
-                implementation(libs.kommander.core)
-            }
-        }
-
-        if(Targeting.JS) {
-            val jsMain by getting {
-                dependencies {
-                    api(npm("platform", npm.versions.platform.get()))
-                }
-            }
-        }
-
-        for ((platform, targets) in targetGroups) {
-            val intermediate = create("${platform}Main") {
-                dependsOn(commonMain)
-            }
-            for (target in targets) {
-                val main by target.compilations
-                main.defaultSourceSet.dependsOn(intermediate)
-            }
+        commonTest.dependencies {
+            api(libs.kommander.core)
         }
     }
+}
+
+rootProject.the<NodeJsRootExtension>().apply {
+    version = npm.versions.node.version.get()
+    downloadBaseUrl = npm.versions.node.url.get()
+}
+
+rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
+    args.add("--ignore-engines")
+}
+
+tasks.named("wasmJsTestTestDevelopmentExecutableCompileSync").configure {
+    mustRunAfter(tasks.named("jsBrowserTest"))
+    mustRunAfter(tasks.named("jsNodeTest"))
 }
