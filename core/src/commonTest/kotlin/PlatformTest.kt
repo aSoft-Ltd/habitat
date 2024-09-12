@@ -1,20 +1,18 @@
-import kotlinx.serialization.json.Json
-import platform.ExecutionEnvironment
-import platform.Platform
+import habitat.Platform
+import habitat.PlatformManager
 import kotlin.test.Test
+import kotlinx.serialization.json.Json
 
 class PlatformTest {
-
     @Test
-    fun should_print_the_name_of_the_platform() {
-        println(Platform.name)
-    }
-
-    @Test
-    fun should_print_the_serialized_values() {
-        val platform = Platform
-        val serializer = ExecutionEnvironment.serializer()
-        val json = Json.encodeToString(serializer, platform)
+    fun should_detect_the_platform_type() {
+        val manager = PlatformManager()
+        val platform = manager.current()
+        println("Platform: $platform")
+        val codec = Json {
+            prettyPrint = true
+        }
+        val json = codec.encodeToString(Platform.serializer(), platform)
         println(json)
     }
 }

@@ -1,15 +1,27 @@
 import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-import org.jetbrains.kotlin.gradle.targets.js.npm.tasks.KotlinNpmInstallTask
 
 plugins {
     kotlin("multiplatform")
+    id("com.android.library")
     kotlin("plugin.serialization")
     id("tz.co.asoft.library")
 }
 
 description = "A kotlin multiplatform library to detect the current running platform"
 
+configureAndroid("src/androidMain") {
+    namespace = "tz.co.asoft.habitat"
+    defaultConfig {
+        minSdk = 14
+    }
+
+    lintOptions {
+        isAbortOnError = false
+    }
+}
+
 kotlin {
+    if (Targeting.ANDROID) androidTarget { library() }
     if (Targeting.JVM) jvm { library() }
     if (Targeting.JS) js(IR) { library() }
     if (Targeting.WASM) wasmJs { library() }
@@ -21,11 +33,20 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
-
+            api(kotlinx.serialization.core)
         }
 
         commonTest.dependencies {
-            api(libs.kommander.core)
+            implementation(kotlinx.serialization.json)
+            implementation(libs.kommander.core)
+        }
+
+        jsMain.dependencies {
+            implementation(npm("platform", file("src/jsMain/resources/platform")))
+        }
+
+        wasmJsMain.dependencies {
+            implementation(npm("platform", file("src/jsMain/resources/platform")))
         }
     }
 }
@@ -35,9 +56,9 @@ rootProject.the<NodeJsRootExtension>().apply {
     downloadBaseUrl = npm.versions.node.url.get()
 }
 
-rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
-    args.add("--ignore-engines")
-}
+//rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
+//    args.add("--ignore-engines")
+//}
 
 tasks.named("wasmJsTestTestDevelopmentExecutableCompileSync").configure {
     mustRunAfter(tasks.named("jsBrowserTest"))
