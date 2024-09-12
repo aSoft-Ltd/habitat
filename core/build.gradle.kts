@@ -44,11 +44,13 @@ kotlin {
         }
 
         jsMain.dependencies {
-            implementation(npm("platform", file("src/jsMain/resources/platform")))
+//            implementation(npm("platform", file("src/jsMain/resources/platform")))
+            implementation(npm("platform", npm.versions.platform.get()))
         }
 
         wasmJsMain.dependencies {
-            implementation(npm("platform", file("src/jsMain/resources/platform")))
+//            implementation(npm("platform", file("src/jsMain/resources/platform")))
+            implementation(npm("platform", npm.versions.platform.get()))
         }
     }
 }
