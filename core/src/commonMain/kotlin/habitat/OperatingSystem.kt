@@ -15,6 +15,8 @@ data class OperatingSystem(
     enum class Family {
         WINDOWS,
         MACOS,
+        WATCHOS,
+        TVOS,
         LINUX,
         IOS,
         ANDROID,

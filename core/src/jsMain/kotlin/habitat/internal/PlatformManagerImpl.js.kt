@@ -14,7 +14,7 @@ import habitat.utils.common.require
 
 @PublishedApi
 internal actual class PlatformManagerImpl actual constructor() : PlatformManager {
-    override fun current(): Platform {
+    actual override fun current(): Platform {
         val p = require<habitat.utils.npm.Platform?>("platform")
         var host = run {
             val name = p?.os?.family ?: "unknown"

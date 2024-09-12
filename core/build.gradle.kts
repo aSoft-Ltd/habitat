@@ -12,7 +12,9 @@ description = "A kotlin multiplatform library to detect the current running plat
 configureAndroid("src/androidMain") {
     namespace = "tz.co.asoft.habitat"
     defaultConfig {
-        minSdk = 14
+        minSdk = 25
+        compileSdkVersion(32)
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     lintOptions {
@@ -49,6 +51,13 @@ kotlin {
             implementation(npm("platform", file("src/jsMain/resources/platform")))
         }
     }
+}
+
+dependencies {
+    androidTestImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.2.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation(kotlinx.serialization.json)
 }
 
 rootProject.the<NodeJsRootExtension>().apply {

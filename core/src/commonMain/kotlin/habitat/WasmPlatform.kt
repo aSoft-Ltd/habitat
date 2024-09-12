@@ -11,7 +11,7 @@ data class WasmPlatform(
     override val device: Device,
     override val host: OperatingSystem
 ) : Platform {
-    override val group by lazy { PlatformGroup.Javascript }
+    override val group by lazy { PlatformGroup.Wasm }
 
     override val version by lazy {
         // chromium-mobile-234.0.0-windows-10.0-Unknown

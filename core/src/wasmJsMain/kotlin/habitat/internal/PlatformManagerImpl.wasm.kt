@@ -15,7 +15,7 @@ import habitat.wasm.BrowserlessEnvironment
 
 @PublishedApi
 internal actual class PlatformManagerImpl actual constructor() : PlatformManager {
-    override fun current(): Platform {
+    actual override fun current(): Platform {
         val p = platform
         var host = run {
             val name = p.os?.family ?: "unknown"
@@ -34,7 +34,7 @@ internal actual class PlatformManagerImpl actual constructor() : PlatformManager
         )
 
         val runtime = WasmRuntime(version = "1.x")
-        println("Before browser check")
+
         if (isRunningInBrowser) {
             val environment = run {
                 val name = p.name

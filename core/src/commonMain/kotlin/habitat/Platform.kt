@@ -10,4 +10,5 @@ sealed interface Platform {
     val runtime: Runtime
     val device: Device
     val version: String
+    val name get() = group.name
 }

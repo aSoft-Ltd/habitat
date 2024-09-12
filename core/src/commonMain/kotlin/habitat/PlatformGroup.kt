@@ -1,5 +1,5 @@
 package habitat
 
 enum class PlatformGroup {
-    Linux, Windows, MacOS, Android, iOS, Javascript, Unknown
+    Linux, Windows, MacOS, Android, iOS, Jvm, Javascript, Wasm, Unknown,
 }
