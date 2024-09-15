@@ -7,6 +7,7 @@ import habitat.Device
 import habitat.NativePlatform
 import habitat.OperatingSystem
 import habitat.Platform
+import habitat.PlatformGroup
 import habitat.PlatformManager
 import habitat.runtime.NativeRuntime
 import kotlinx.cinterop.ByteVar
@@ -20,6 +21,7 @@ import platform.posix.android_get_device_api_level
 @PublishedApi
 internal actual class PlatformManagerImpl actual constructor() : PlatformManager {
     actual override fun current(): Platform = NativePlatform(
+        group = PlatformGroup.AndroidNative,
         host = run {
             val version = memScoped {
                 val buf = allocArray<ByteVar>(555)

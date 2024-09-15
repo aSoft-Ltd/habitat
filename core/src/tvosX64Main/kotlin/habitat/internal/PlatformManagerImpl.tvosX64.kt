@@ -5,6 +5,7 @@ import habitat.Device
 import habitat.NativePlatform
 import habitat.OperatingSystem
 import habitat.Platform
+import habitat.PlatformGroup
 import habitat.PlatformManager
 import habitat.runtime.NativeRuntime
 import platform.UIKit.UIDevice
@@ -12,6 +13,7 @@ import platform.UIKit.UIDevice
 @PublishedApi
 internal actual class PlatformManagerImpl actual constructor() : PlatformManager {
     actual override fun current(): Platform = NativePlatform(
+        group = PlatformGroup.TvOS,
         host = OperatingSystem(
             name = UIDevice.currentDevice.systemName,
             family = OperatingSystem.Family.TVOS,

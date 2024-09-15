@@ -5,6 +5,7 @@ import habitat.Device
 import habitat.NativePlatform
 import habitat.OperatingSystem
 import habitat.Platform
+import habitat.PlatformGroup
 import habitat.PlatformManager
 import habitat.runtime.NativeRuntime
 import platform.Foundation.NSProcessInfo
@@ -14,6 +15,7 @@ internal actual class PlatformManagerImpl actual constructor() : PlatformManager
     actual override fun current(): Platform {
         val version = NSProcessInfo.processInfo.operatingSystemVersionString.substringAfter(" ").substringBefore(" ")
         return NativePlatform(
+            group = PlatformGroup.WatchOs,
             host = OperatingSystem(
                 name = "WatchOs",
                 family = OperatingSystem.Family.WATCHOS,

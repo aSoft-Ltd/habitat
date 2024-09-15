@@ -5,12 +5,14 @@ import habitat.Device
 import habitat.NativePlatform
 import habitat.OperatingSystem
 import habitat.Platform
+import habitat.PlatformGroup
 import habitat.PlatformManager
 import habitat.runtime.NativeRuntime
 
 @PublishedApi
 internal actual class PlatformManagerImpl actual constructor() : PlatformManager {
     actual override fun current(): Platform = NativePlatform(
+        group = PlatformGroup.Windows,
         host = OperatingSystem(
             name = "Windows",
             family = OperatingSystem.Family.WINDOWS,

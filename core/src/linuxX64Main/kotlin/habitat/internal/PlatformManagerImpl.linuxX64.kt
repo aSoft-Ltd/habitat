@@ -7,6 +7,7 @@ import habitat.Device
 import habitat.NativePlatform
 import habitat.OperatingSystem
 import habitat.Platform
+import habitat.PlatformGroup
 import habitat.PlatformManager
 import habitat.runtime.NativeRuntime
 import kotlinx.cinterop.ExperimentalForeignApi
@@ -26,6 +27,7 @@ internal actual class PlatformManagerImpl actual constructor() : PlatformManager
             sys
         }
         return NativePlatform(
+            group = PlatformGroup.Linux,
             host = OperatingSystem(
                 name = s.sysname.toKString(),
                 family = OperatingSystem.Family.LINUX,
