@@ -37,7 +37,7 @@ subprojects {
     version = v
 
     configure<MavenPublishBaseExtension> {
-        publishToMavenCentral(SonatypeHost.DEFAULT,automaticRelease = true)
+        publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL,automaticRelease = true)
 
         signAllPublications()
 
