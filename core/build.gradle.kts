@@ -1,5 +1,3 @@
-import org.jetbrains.kotlin.gradle.targets.js.nodejs.NodeJsRootExtension
-
 plugins {
     kotlin("multiplatform")
     id("com.android.library")
@@ -43,35 +41,25 @@ kotlin {
             implementation(libs.kommander.core)
         }
 
-        jsMain.dependencies {
-//            implementation(npm("platform", file("src/jsMain/resources/platform")))
+        if (Targeting.JS) jsMain.dependencies {
             implementation(npm("platform", npm.versions.platform.get()))
         }
 
-        wasmJsMain.dependencies {
-//            implementation(npm("platform", file("src/jsMain/resources/platform")))
+        if (Targeting.WASM) wasmJsMain.dependencies {
             implementation(npm("platform", npm.versions.platform.get()))
+        }
+
+        if (Targeting.JVM) jvmTest.dependencies {
+            implementation(kotlin("test-junit5"))
+        }
+
+        if (Targeting.ANDROID) androidUnitTest.dependencies {
+            implementation(kotlin("test-junit5"))
         }
     }
 }
 
-dependencies {
-    androidTestImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    androidTestImplementation(kotlinx.serialization.json)
-}
-
-rootProject.the<NodeJsRootExtension>().apply {
-    version = npm.versions.node.version.get()
-    downloadBaseUrl = npm.versions.node.url.get()
-}
-
-//rootProject.tasks.withType<KotlinNpmInstallTask>().configureEach {
-//    args.add("--ignore-engines")
+//tasks.named("wasmJsTestTestDevelopmentExecutableCompileSync").configure {
+//    mustRunAfter(tasks.named("jsBrowserTest"))
+//    mustRunAfter(tasks.named("jsNodeTest"))
 //}
-
-tasks.named("wasmJsTestTestDevelopmentExecutableCompileSync").configure {
-    mustRunAfter(tasks.named("jsBrowserTest"))
-    mustRunAfter(tasks.named("jsNodeTest"))
-}
