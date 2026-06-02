@@ -1,7 +1,6 @@
 import habitat.Platform
 import habitat.PlatformManager
 import kotlin.test.Test
-import kotlin.test.fail
 import kotlinx.serialization.json.Json
 
 class PlatformTest {

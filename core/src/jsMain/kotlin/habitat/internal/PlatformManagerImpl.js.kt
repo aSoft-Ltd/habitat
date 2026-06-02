@@ -8,56 +8,61 @@ import habitat.PlatformManager
 import habitat.javascript.BrowserEnvironment
 import habitat.javascript.BrowserlessEnvironment
 import habitat.node.OS
+import habitat.node.operatingSystem
 import habitat.node.process
 import habitat.runtime.JavascriptRuntime
+import habitat.utils.common.navigator
 import habitat.utils.common.require
+import habitat.utils.npm.platform
 
 @PublishedApi
 internal actual class PlatformManagerImpl actual constructor() : PlatformManager {
     actual override fun current(): Platform {
-        val p = require<habitat.utils.npm.Platform?>("platform")
+        val p = platform
         var host = run {
-            val name = p?.os?.family ?: "unknown"
+            val name = p.os?.family ?: "unknown"
             OperatingSystem(
                 name = name,
                 family = name.toFamily(),
-                version = p?.os?.version ?: "unknown"
+                version = p.os?.version ?: "unknown"
             )
         }
 
-        val device = Device(
-            name = p?.manufacturer ?: host.toDeviceName(),
-            model = p?.manufacturer ?: host.toManufacturer(),
-            cpu = "${p?.os?.architecture}".toArch(),
-            type = host.toDeviceType()
-        )
         if (isRunningInBrowser) {
+            println(navigator?.userAgent?.toString())
+            val device = Device(
+                name = p.manufacturer ?: host.toDeviceName(),
+                model = p.manufacturer ?: host.toManufacturer(),
+//                cpu = p.os?.toString().toArch(),
+                cpu = navigator?.userAgent?.toString().toArch(),
+                type = host.toDeviceType()
+            )
+
             val environment = run {
-                val name = p?.name ?: "Unknown"
+                val name = p.name
                 val engine = name.toRenderer()
                 BrowserEnvironment(
                     name = name,
                     engine = engine,
                     family = engine.toFamily(),
-                    version = p?.version ?: "unknown"
+                    version = p.version
                 )
             }
             return JavascriptPlatform(
                 environment = environment,
-                runtime = JavascriptRuntime(engine = environment.name.toJavascriptEngine(), version = p?.version ?: "unknown"),
+                runtime = JavascriptRuntime(engine = environment.name.toJavascriptEngine(), version = p.version),
                 device = device,
                 host = host
             )
         }
 
-
-        val os = require<OS?>("os")
+        val os = require<OS>("os")
         host = run {
-            val name = os?.platform() ?: process.platform
+            val name = os.platform()
             OperatingSystem(
                 name = name,
                 family = name.toFamily(),
-                version = os?.release() ?: "Unknown"
+                version = os.release()
             )
         }
         val environment = BrowserlessEnvironment(
@@ -67,6 +72,13 @@ internal actual class PlatformManagerImpl actual constructor() : PlatformManager
         val runtime = JavascriptRuntime(
             engine = environment.toEngine(),
             version = process.version
+        )
+
+        val device = Device(
+            name = p.manufacturer ?: host.toDeviceName(),
+            model = p.manufacturer ?: host.toManufacturer(),
+            cpu = process.arch.toArch(),
+            type = host.toDeviceType()
         )
         return JavascriptPlatform(environment, runtime, device, host)
     }

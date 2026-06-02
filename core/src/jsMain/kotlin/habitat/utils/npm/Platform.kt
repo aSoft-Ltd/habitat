@@ -8,14 +8,14 @@ internal external interface Platform {
     val ua: String?
     val name: String
     val description: String
-    val manufacturer: String
+    val manufacturer: String?
     val version: String
     val os: OS?
     val product: String
 }
 
 internal external interface OS {
-    val architecture: String
+    val architecture: Int?
     val family: String
     val version: String?
 }

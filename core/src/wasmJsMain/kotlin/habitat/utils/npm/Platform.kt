@@ -14,7 +14,7 @@ internal external interface Platform : JsAny {
 }
 
 internal external interface OS : JsAny {
-    val architecture: String
+    val architecture: Int?
     val family: String
     val version: String?
 }

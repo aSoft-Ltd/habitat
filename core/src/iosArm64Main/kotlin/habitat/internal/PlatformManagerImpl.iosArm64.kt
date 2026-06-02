@@ -1,3 +1,4 @@
+
 package habitat.internal
 
 import habitat.Architecture

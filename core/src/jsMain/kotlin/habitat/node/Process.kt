@@ -4,6 +4,7 @@ external interface Process {
     val platform: String
     val version: String
     val versions: Versions
+    val arch: String
 }
 
 external interface Versions {

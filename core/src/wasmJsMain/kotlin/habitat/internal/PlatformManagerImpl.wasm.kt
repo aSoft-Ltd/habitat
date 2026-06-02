@@ -26,16 +26,16 @@ internal actual class PlatformManagerImpl actual constructor() : PlatformManager
             )
         }
 
-        val device = Device(
-            name = p.manufacturer ?: host.toDeviceName(),
-            model = p.manufacturer ?: host.toManufacturer(),
-            cpu = "${p.os?.architecture}".toArch(),
-            type = host.toDeviceType()
-        )
-
         val runtime = WasmRuntime(version = "1.x")
 
         if (isRunningInBrowser) {
+            val device = Device(
+                name = p.manufacturer ?: host.toDeviceName(),
+                model = p.manufacturer ?: host.toManufacturer(),
+                cpu = p.os?.toString().toArch(),
+                type = host.toDeviceType()
+            )
+
             val environment = run {
                 val name = p.name
                 val engine = name.toRenderer()
@@ -62,6 +62,13 @@ internal actual class PlatformManagerImpl actual constructor() : PlatformManager
         val environment = BrowserlessEnvironment(
             name = "Node",
             version = process.version
+        )
+
+        val device = Device(
+            name = p.manufacturer ?: host.toDeviceName(),
+            model = p.manufacturer ?: host.toManufacturer(),
+            cpu = process.arch.toArch(),
+            type = host.toDeviceType()
         )
         return WasmPlatform(environment, runtime, device, host)
     }

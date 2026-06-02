@@ -3,6 +3,8 @@ package habitat.node
 external interface Process : JsAny {
     val platform: String
     val version: String
+
+    val arch: String
     val versions: Versions
 }
 
