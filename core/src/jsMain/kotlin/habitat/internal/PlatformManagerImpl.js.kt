@@ -29,11 +29,9 @@ internal actual class PlatformManagerImpl actual constructor() : PlatformManager
         }
 
         if (isRunningInBrowser) {
-            println(navigator?.userAgent?.toString())
             val device = Device(
                 name = p.manufacturer ?: host.toDeviceName(),
                 model = p.manufacturer ?: host.toManufacturer(),
-//                cpu = p.os?.toString().toArch(),
                 cpu = navigator?.userAgent?.toString().toArch(),
                 type = host.toDeviceType()
             )
