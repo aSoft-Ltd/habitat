@@ -1,0 +1,1 @@
+config.resolve.fallback = { "os": false }

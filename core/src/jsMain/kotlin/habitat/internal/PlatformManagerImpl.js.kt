@@ -8,11 +8,9 @@ import habitat.PlatformManager
 import habitat.javascript.BrowserEnvironment
 import habitat.javascript.BrowserlessEnvironment
 import habitat.node.OS
-import habitat.node.operatingSystem
 import habitat.node.process
 import habitat.runtime.JavascriptRuntime
 import habitat.utils.common.navigator
-import habitat.utils.common.require
 import habitat.utils.npm.platform
 
 @PublishedApi
@@ -54,13 +52,12 @@ internal actual class PlatformManagerImpl actual constructor() : PlatformManager
             )
         }
 
-        val os = require<OS>("os")
         host = run {
-            val name = os.platform()
+            val name = OS.platform()
             OperatingSystem(
                 name = name,
                 family = name.toFamily(),
-                version = os.release()
+                version = OS.release()
             )
         }
         val environment = BrowserlessEnvironment(
